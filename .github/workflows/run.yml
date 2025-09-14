@@ -1,0 +1,31 @@
+name: Run Selenium Script
+
+on:
+  workflow_dispatch:   # Trigger manually from GitHub Actions tab
+  schedule:
+    - cron: "0 6 * * *"   # Runs daily at 6 AM UTC
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Install Chrome
+      run: |
+        sudo apt update
+        sudo apt install -y chromium-browser chromium-chromedriver
+        export PATH=$PATH:/usr/lib/chromium-browser/
+
+    - name: Run Selenium bot
+      run: python main.py
