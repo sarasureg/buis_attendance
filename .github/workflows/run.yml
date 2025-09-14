@@ -1,9 +1,9 @@
 name: Run Selenium Script
 
 on:
-  workflow_dispatch:   # Trigger manually from GitHub Actions tab
   schedule:
-    - cron: "0 6 * * *"   # Runs daily at 6 AM UTC
+    - cron: "30 20 * * *"   # Runs daily at 2 AM IST (20:30 UTC previous day)
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -21,11 +21,23 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
-    - name: Install Chrome
+    - name: Install Google Chrome
       run: |
-        sudo apt update
-        sudo apt install -y chromium-browser chromium-chromedriver
-        export PATH=$PATH:/usr/lib/chromium-browser/
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-    - name: Run Selenium bot
+    - name: Install Chromedriver
+      run: |
+        CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
+        wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}.0.0/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    - name: Run Selenium script
+      env:
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
       run: python main.py
