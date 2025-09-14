@@ -28,8 +28,8 @@ os.makedirs(temp_folder, exist_ok=True)
 os.makedirs(final_folder, exist_ok=True)
 
 # Credentials from GitHub Secrets (or local env vars)
-USERNAME = os.environ.get("USERNAME", "replace_with_local_username")
-PASSWORD = os.environ.get("PASSWORD", "replace_with_local_password")
+USERNAME = os.environ.get("USERNAME", "soumen_saha")
+PASSWORD = os.environ.get("PASSWORD", "newpass")
 
 # ----------------------------
 # Chrome Setup (Headless for GitHub Actions)
@@ -204,3 +204,4 @@ print(f"Final merged file saved as {output_file}")
 # Clean up
 clean_folder(final_folder)
 driver.quit()
+
